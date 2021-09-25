@@ -3,11 +3,13 @@
 
 #include <raylib.h>
 
-extern int pixelSize;
-extern int screenWidth;
-extern int screenHeight;
+typedef struct {
+    int scale;
+    int width;
+    int height;
+    char* windowTitle;
+} DisplayConfig;
 
-void InitRenderer();
 int Run();
 void SetPixel(unsigned int x, unsigned int y, unsigned int color);
 

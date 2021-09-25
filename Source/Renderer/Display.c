@@ -1,36 +1,37 @@
 #include <raylib.h>
+#include <stdlib.h>
 
 #include "Display.h"
 #include "Hooks.h"
 
-int pixelSize;
-int screenWidth = 320;
-int screenHeight = 200;
-
 Image image;
 unsigned int* buffer;
 Texture2D texture;
+int width;
+int scale;
 
 
-void InitRenderer() {
-    pixelSize = 3;
-    InitWindow(screenWidth * pixelSize, screenHeight * pixelSize, "Renderer");
+void InitRenderer(DisplayConfig displayConfig) {
+    InitWindow(displayConfig.width * displayConfig.scale,
+               displayConfig.height * displayConfig.scale,
+               displayConfig.windowTitle);
     
     SetTargetFPS(60);
 
-    image = GenImageColor(screenWidth, screenHeight, BLACK);
+    image = GenImageColor(displayConfig.width, displayConfig.height, BLACK);
     buffer = image.data;
     texture = LoadTextureFromImage(image);
+
+    width = displayConfig.width;
+    scale = displayConfig.scale;
 }
 
 void SetPixel(unsigned int x, unsigned int y, unsigned int color) {
-    *(buffer + y * screenWidth + x) = color;
+    *(buffer + y * width + x) = color;
 }
 
-int Run() {
-    Init(); // hook
-    InitRenderer();
-    PostInit(); // hook
+int Run(DisplayConfig displayConfig) {
+    InitRenderer(displayConfig);
 
     while (!WindowShouldClose()) {
         Update(); // hook
@@ -45,7 +46,7 @@ int Run() {
 
         // draw buffer
         UpdateTexture(texture, buffer);
-        DrawTextureEx(texture, (Vector2){0, 0}, 0, pixelSize, WHITE);
+        DrawTextureEx(texture, (Vector2){0, 0}, 0, scale, WHITE);
 
         PostDraw(); // hook
         

@@ -1,11 +1,14 @@
-#include <string.h>
-#include <stdlib.h>
-#include <raylib.h>
-
-#include "Display.h"
-
+#include "Chip8/Chip8.h"
+#include "Renderer/Renderer.h"
 
 int main(void) {
-    return Run();
+    DisplayConfig displayConfig = {
+        .scale = 10,
+        .width = CHIP8_WIDTH,
+        .height = CHIP8_HEIGHT,
+        .windowTitle = "Chip8 Emulator",
+    };
+    
+    return Run(displayConfig);
 }
 

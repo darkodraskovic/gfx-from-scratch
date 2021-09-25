@@ -1,22 +1,12 @@
-#include <raylib.h>
-
-#include "Hooks.h"
-#include "Display.h"
+#include "Chip8/Chip8.h"
+#include "Renderer/Renderer.h"
 
 Vector2 pos = {0, 0};
 int count = 0;
 
-void Init() {
-    
-}
-
-void PostInit() {
-    
-}
-
 void Update() {
-    pos.x = (int)(++pos.x) % screenHeight;
-    pos.y = (int)(++pos.y) % screenHeight;
+    pos.x = (int)(++pos.x) % CHIP8_WIDTH;
+    pos.y = (int)(++pos.y) % CHIP8_HEIGHT;
 }
 
 void PostUpdate() {
