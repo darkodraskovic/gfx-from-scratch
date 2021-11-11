@@ -1,7 +1,8 @@
+#include "Display.h"
+
 #include <raylib.h>
 #include <stdlib.h>
 
-#include "Display.h"
 #include "Hooks.h"
 
 Image image;
@@ -10,49 +11,50 @@ Texture2D texture;
 int width;
 int scale;
 
-
 void InitRenderer(DisplayConfig displayConfig) {
-    InitWindow(displayConfig.width * displayConfig.scale,
-               displayConfig.height * displayConfig.scale,
-               displayConfig.windowTitle);
-    
-    SetTargetFPS(60);
+  InitWindow(displayConfig.width * displayConfig.scale,
+             displayConfig.height * displayConfig.scale,
+             displayConfig.windowTitle);
 
-    image = GenImageColor(displayConfig.width, displayConfig.height, BLACK);
-    buffer = image.data;
-    texture = LoadTextureFromImage(image);
+  SetTargetFPS(60);
 
-    width = displayConfig.width;
-    scale = displayConfig.scale;
+  image = GenImageColor(displayConfig.width, displayConfig.height, BLACK);
+  buffer = image.data;
+  texture = LoadTextureFromImage(image);
+
+  width = displayConfig.width;
+  scale = displayConfig.scale;
 }
 
 void SetPixel(unsigned int x, unsigned int y, unsigned int color) {
-    *(buffer + y * width + x) = color;
+  *(buffer + y * width + x) = color;
 }
 
 int Run(DisplayConfig displayConfig) {
-    InitRenderer(displayConfig);
+  Init();
+  InitRenderer(displayConfig);
 
-    while (!WindowShouldClose()) {
-        Update(); // hook
-        PostUpdate(); // hook
-        
-        BeginDrawing();
+  while (!WindowShouldClose()) {
+    Update();      // hook
+    PostUpdate();  // hook
 
-        // clear buffer
-        ImageClearBackground(&image, BLACK);
+    BeginDrawing();
 
-        Draw(); // hook
+    // clear buffer
+    ImageClearBackground(&image, BLACK);
 
-        // draw buffer
-        UpdateTexture(texture, buffer);
-        DrawTextureEx(texture, (Vector2){0, 0}, 0, scale, WHITE);
+    // set buffer values
+    Draw();  // hook
 
-        PostDraw(); // hook
-        
-        EndDrawing();
-    }
+    // draw buffer
+    UpdateTexture(texture, buffer);
+    DrawTextureEx(texture, (Vector2){0, 0}, 0, scale, WHITE);
 
-    CloseWindow();        // Close window and OpenGL context
-    return 0;
+    PostDraw();  // hook
+
+    EndDrawing();
+  }
+
+  CloseWindow();  // Close window and OpenGL context
+  return 0;
 }
