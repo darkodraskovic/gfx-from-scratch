@@ -6,5 +6,6 @@ void Update();
 void PostUpdate();
 void Draw();
 void PostDraw();
+void Close();
 
 #endif /* HOOKS_H */

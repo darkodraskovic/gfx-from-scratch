@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "Renderer/Renderer.h"
+#include "Renderer/Display.h"
 
 extern DisplayConfig displayConfig;
 

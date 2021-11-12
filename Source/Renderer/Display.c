@@ -31,8 +31,8 @@ void SetPixel(unsigned int x, unsigned int y, unsigned int color) {
 }
 
 int Run(DisplayConfig displayConfig) {
-  Init();
   InitRenderer(displayConfig);
+  Init();
 
   while (!WindowShouldClose()) {
     Update();      // hook
@@ -55,6 +55,8 @@ int Run(DisplayConfig displayConfig) {
     EndDrawing();
   }
 
+  Close();
   CloseWindow();  // Close window and OpenGL context
+
   return 0;
 }
