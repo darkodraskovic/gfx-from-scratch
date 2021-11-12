@@ -8,6 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 add_library(util SHARED
   Source/Util/Array.c
+  Source/Util/Color.c
   )
 target_include_directories(util PUBLIC Source/Util)
 
