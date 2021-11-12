@@ -3,29 +3,50 @@
 #include "../Renderer/Display.h"
 #include "Raytracer.h"
 
-Rt_IntRect canvas;
-Rectangle viewport = (Rectangle){-.5, -.5, 1, 1};
+struct {
+  int left;
+  int right;
+  int top;
+  int bottom;
+  int width;
+  int height;
+  int heightMinusOne;
+  int halfWidth;
+  int halfHeight;
+} canvas;
 
-Vector3 Rt_CanvasToViewport(int canvasX, int canvasY) {
-  return (Vector3){canvasX * (viewport.width / canvas.width),
-                   canvasY * (viewport.height / canvas.height), 1};
+Rectangle viewport = (Rectangle){-.5, -.5, 1, 1};
+Vector2 viewportCanvasRatio;
+Vector3 origin = (Vector3){0, 0, 0};
+Vector3 direction = {0, 0, 1};
+
+static inline void canvasToViewport(int canvasX, int canvasY) {
+  direction.x = canvasX * viewportCanvasRatio.x;
+  direction.y = canvasY * viewportCanvasRatio.y;
 }
 
 void Rt_InitCanvas(int scrW, int scrH) {
-  canvas.x = -scrW / 2;
-  canvas.y = -scrH / 2;
+  canvas.left = -scrW / 2;
+  canvas.top = -scrH / 2;
+  canvas.right = canvas.left + scrW;
+  canvas.bottom = canvas.top + scrH;
   canvas.width = scrW;
   canvas.height = scrH;
+  canvas.heightMinusOne = scrH - 1;
+  canvas.halfWidth = scrW / 2;
+  canvas.halfHeight = scrH / 2;
+
+  viewportCanvasRatio.x = viewport.width / canvas.width;
+  viewportCanvasRatio.y = viewport.height / canvas.height;
 }
 
 void Rt_Render(Rt_Scene* scene) {
-  for (int x = canvas.x; x < canvas.x + canvas.width; x++) {
-    for (int y = canvas.y; y < canvas.y + canvas.height; y++) {
-      Vector3 direction = Rt_CanvasToViewport(x, y);
-      unsigned int color =
-          Rt_TraceRay(scene, (Vector3){0, 0, 0}, direction, 1, INFINITY);
-      SetPixel(x + canvas.width / 2,
-               (canvas.height - 1) - (y + canvas.height / 2), color);
+  for (int x = canvas.left; x < canvas.right; x++) {
+    for (int y = canvas.top; y < canvas.bottom; y++) {
+      canvasToViewport(x, y);
+      unsigned int color = Rt_TraceRay(scene, origin, direction, 1, INFINITY);
+      SetPixel(x + canvas.halfWidth,
+               canvas.heightMinusOne - (y + canvas.halfHeight), color);
     }
   }
 }
