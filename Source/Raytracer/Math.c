@@ -12,8 +12,9 @@ Vector2 Rt_IntersectRaySphere(Vector3 origin, Vector3 direction,
 
   float discriminant = b * b - 4 * a * c;
   if (discriminant < 0) return (Vector2){INFINITY, INFINITY};
-  float t1 = (-b + sqrt(discriminant)) / (2 * a);
-  float t2 = (-b - sqrt(discriminant)) / (2 * a);
 
-  return (Vector2){t1, t2};
+  float a1 = -b / (2 * a);
+  float a2 = sqrtf(discriminant) / (2 * a);
+
+  return (Vector2){a1 + a2, a1 - a2};
 }

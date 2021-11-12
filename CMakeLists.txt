@@ -16,7 +16,7 @@ add_library(renderer SHARED
   Source/Renderer/Display.c
   )
 target_include_directories(renderer PUBLIC Source/Renderer)
-target_link_libraries(renderer raylib)
+target_link_libraries(renderer PUBLIC raylib)
 
 add_library(raytracer SHARED
   Source/Raytracer/Math.c
@@ -26,11 +26,11 @@ add_library(raytracer SHARED
   Source/Raytracer/Hooks.c
   )
 target_include_directories(raytracer PUBLIC Source/Raytracer)
-target_link_libraries(raytracer renderer util raylib)
+target_link_libraries(raytracer PUBLIC renderer util)
 
 add_executable(main
   Source/Config.c
   Source/Main.c
   Source/Hooks.c)
 target_include_directories(main PUBLIC Source)
-target_link_libraries(main util raytracer)
+target_link_libraries(main raytracer)

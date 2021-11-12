@@ -5,10 +5,11 @@
 static inline float computeIntensity(float intensity, Vector3 lightDir,
                                      Vector3 normal) {
   float dot = Vector3DotProduct(lightDir, normal);
-  return (dot > 0)
-             ? intensity *
-                   (dot / (Vector3Length(lightDir) * Vector3Length(normal)))
-             : 0;
+  if (dot < 0) return 0;
+
+  /* intensity times cosine of lightDir-normal angle */
+  return intensity *
+         (dot / sqrtf(Vector3LengthSqr(lightDir) * Vector3LengthSqr(normal)));
 }
 
 float computeLighting(Rt_Scene* scene, Vector3 point, Vector3 normal) {
@@ -53,9 +54,10 @@ unsigned int Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
     return 0xffffffff;
   }
 
+  // sphere-ray intersection point
   Vector3 point = Vector3Add(origin, Vector3Scale(direction, closestT));
+  // intersection point normal
   Vector3 normal = Vector3Subtract(point, closestSphere->center);
-  normal = Vector3Normalize(normal);
 
   return SetColorBrightness(closestSphere->color,
                             computeLighting(scene, point, normal));
