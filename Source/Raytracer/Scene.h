@@ -1,6 +1,7 @@
 #ifndef SCENE_RT_H
 #define SCENE_RT_H
 
+#include "../Util/Color.h"
 #include "Math.h"
 
 typedef struct {
@@ -14,7 +15,13 @@ typedef struct {
 } Rt_DirectionalLight;
 
 typedef struct {
-  Rt_Sphere* spheres;
+  Rt_Sphere sphere;
+  color_t color;
+  float specular;
+} Rt_Ball;
+
+typedef struct {
+  Rt_Ball* balls;
   Rt_PointLight* pointLights;
   Rt_DirectionalLight* directionalLights;
   float ambientLight;

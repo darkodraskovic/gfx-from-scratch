@@ -11,14 +11,18 @@ void Rt_Init(int scrW, int scrH) {
   scene = Rt_CreateScene();
 
   // objects
-  Rt_Sphere sphere1 = ((Rt_Sphere){(Vector3){0, -1, 3}, 1, 0xff0000ff});
-  Rt_Sphere sphere2 = ((Rt_Sphere){(Vector3){2, 0, 4}, 1, 0xffff0000});
-  Rt_Sphere sphere3 = ((Rt_Sphere){(Vector3){-2, 0, 4}, 1, 0xff00ff00});
-  Rt_Sphere sphere4 = ((Rt_Sphere){(Vector3){0, -5001, 0}, 5000, 0xff00ffff});
-  arrPush(scene->spheres, sphere1);
-  arrPush(scene->spheres, sphere2);
-  arrPush(scene->spheres, sphere3);
-  arrPush(scene->spheres, sphere4);
+  Rt_Sphere sphere1 = ((Rt_Sphere){(Vector3){0, -1, 3}, 1});
+  Rt_Sphere sphere2 = ((Rt_Sphere){(Vector3){2, 0, 4}, 1});
+  Rt_Sphere sphere3 = ((Rt_Sphere){(Vector3){-2, 0, 4}, 1});
+  Rt_Sphere sphere4 = ((Rt_Sphere){(Vector3){0, -5001, 0}, 5000});
+  Rt_Ball ball1 = {sphere1, 0xff0000ff, 500.0};
+  Rt_Ball ball2 = {sphere2, 0xffff0000, 500.0};
+  Rt_Ball ball3 = {sphere3, 0xff00ff00, 10.0};
+  Rt_Ball ball4 = {sphere4, 0xff00ffff, 1000.0};
+  arrPush(scene->balls, ball1);
+  arrPush(scene->balls, ball2);
+  arrPush(scene->balls, ball3);
+  arrPush(scene->balls, ball4);
 
   // lights
   scene->ambientLight = .2;

@@ -11,7 +11,13 @@ void PostUpdate(){
 
 };
 
-void Draw() { Rt_Draw(); }
+int x = 0;
+int y = 0;
+void Draw() {
+  Rt_Draw();
+  /* SetPixel(x++ % displayConfig.width, y++ % displayConfig.height,
+   * 0xff0000ff); */
+}
 
 void PostDraw() { DrawFPS(32, 32); };
 
