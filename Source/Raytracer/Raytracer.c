@@ -40,8 +40,9 @@ static inline float computeDiffuse(float intensity, Vector3 light,
 }
 
 static inline float computeSpecular(float intensity, Vector3 light,
-                                    Vector3 normal, Vector3 view, float s) {
-  if (s == -1) return 0;
+                                    Vector3 normal, Vector3 view,
+                                    float specular) {
+  if (specular == -1) return 0;
 
   Vector3 reflect = Vector3Reflect(light, normal);
 
@@ -51,7 +52,7 @@ static inline float computeSpecular(float intensity, Vector3 light,
   return intensity *
          powf(dot / sqrtf(Vector3LengthSqr(reflect) * Vector3LengthSqr(view)),
               /* powf(dot / (Vector3Length(reflect) * Vector3Length(view)), */
-              s);
+              specular);
 }
 
 static inline Rt_Ball* inShadow(Rt_Scene* scene, Vector3 point, Vector3 light,
@@ -96,11 +97,12 @@ float computeLighting(Rt_Scene* scene, Vector3 point, Vector3 normal,
 }
 
 unsigned int Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
-                         float minT, float maxT) {
+                         float minT, float maxT, int depth) {
   Closest closest = closestIntersection(scene, origin, direction, minT, maxT);
 
   if (!closest.ball) {
-    return 0xffffffff;
+    /* return 0xffffffff; */
+    return 0xff000000;
   }
 
   // sphere-ray intersection point
@@ -108,7 +110,16 @@ unsigned int Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
   // intersection point normal
   Vector3 normal = Vector3Subtract(point, closest.ball->sphere.center);
 
-  return SetColorBrightness(
+  unsigned int localColor = SetColorBrightness(
       closest.ball->color,
       computeLighting(scene, point, normal, closest.ball->specular));
+
+  float reflective = closest.ball->reflective;
+  if (depth < 1 || reflective <= 0) return localColor;
+
+  Vector3 reflection = Vector3Reflect(direction, normal);
+  unsigned int reflectedColor =
+      Rt_TraceRay(scene, point, reflection, 0.001, INFINITY, depth - 1);
+
+  return BelendColors(localColor, reflectedColor, reflective);
 }

@@ -22,5 +22,6 @@ typedef uint32_t color_t;
 // #define CYAN (color_t)0xFFFFFF00
 
 color_t SetColorBrightness(color_t color, float percent);
+color_t BelendColors(color_t color1, color_t color2, float ratio);
 
 #endif /* COLOR_H */

@@ -15,10 +15,10 @@ void Rt_Init(int scrW, int scrH) {
   Rt_Sphere sphere2 = ((Rt_Sphere){(Vector3){2, 0, 4}, 1});
   Rt_Sphere sphere3 = ((Rt_Sphere){(Vector3){-2, 0, 4}, 1});
   Rt_Sphere sphere4 = ((Rt_Sphere){(Vector3){0, -5001, 0}, 5000});
-  Rt_Ball ball1 = {sphere1, 0xff0000ff, 500.0};
-  Rt_Ball ball2 = {sphere2, 0xffff0000, 500.0};
-  Rt_Ball ball3 = {sphere3, 0xff00ff00, 10.0};
-  Rt_Ball ball4 = {sphere4, 0xff00ffff, 1000.0};
+  Rt_Ball ball1 = {sphere1, 0xff0000ff, 500.0, .2};
+  Rt_Ball ball2 = {sphere2, 0xffff0000, 500.0, .3};
+  Rt_Ball ball3 = {sphere3, 0xff00ff00, 10.0, .4};
+  Rt_Ball ball4 = {sphere4, 0xff00ffff, 1000.0, .5};
   arrPush(scene->balls, ball1);
   arrPush(scene->balls, ball2);
   arrPush(scene->balls, ball3);
