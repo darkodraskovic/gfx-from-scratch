@@ -1,8 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <raylib.h>
-
 typedef struct {
   int scale;
   int width;

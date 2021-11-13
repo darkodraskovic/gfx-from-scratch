@@ -1,10 +1,10 @@
 #include "Display.h"
 
-#include <raylib.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "Hooks.h"
+#include "raylib.h"
 
 /* Image image; */
 unsigned int* drawBuffer;

@@ -15,7 +15,7 @@ struct {
   int halfHeight;
 } canvas;
 
-Rectangle viewport = (Rectangle){-.5, -.5, 1, 1};
+/* Rectangle viewport = (Rectangle){-.5, -.5, 1, 1}; */
 Vector2 viewportCanvasRatio;
 Vector3 origin = (Vector3){0, 0, 0};
 Vector3 direction = {0, 0, 1};
@@ -36,8 +36,10 @@ void Rt_InitCanvas(int scrW, int scrH) {
   canvas.halfWidth = scrW / 2;
   canvas.halfHeight = scrH / 2;
 
-  viewportCanvasRatio.x = viewport.width / canvas.width;
-  viewportCanvasRatio.y = viewport.height / canvas.height;
+  /* viewportCanvasRatio.x = viewport.width / canvas.width; */
+  /* viewportCanvasRatio.y = viewport.height / canvas.height; */
+  viewportCanvasRatio.x = 1.0 / canvas.width;
+  viewportCanvasRatio.y = 1.0 / canvas.height;
 }
 
 void Rt_Render(Rt_Scene* scene) {
