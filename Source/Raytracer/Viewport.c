@@ -15,7 +15,6 @@ struct {
   int halfHeight;
 } canvas;
 
-/* Rectangle viewport = (Rectangle){-.5, -.5, 1, 1}; */
 Vector2 viewportCanvasRatio;
 Vector3 origin = (Vector3){0, 0, 0};
 Vector3 direction = {0, 0, 1};
@@ -36,8 +35,7 @@ void Rt_InitCanvas(int scrW, int scrH) {
   canvas.halfWidth = scrW / 2;
   canvas.halfHeight = scrH / 2;
 
-  /* viewportCanvasRatio.x = viewport.width / canvas.width; */
-  /* viewportCanvasRatio.y = viewport.height / canvas.height; */
+  // viewport left/bottom = -.5, right/top = .5
   viewportCanvasRatio.x = 1.0 / canvas.width;
   viewportCanvasRatio.y = 1.0 / canvas.height;
 }
@@ -46,10 +44,10 @@ void Rt_Render(Rt_Scene* scene) {
   for (int x = canvas.left; x < canvas.right; x++) {
     for (int y = canvas.top; y < canvas.bottom; y++) {
       canvasToViewport(x, y);
-      unsigned int color =
-          Rt_TraceRay(scene, origin, direction, 1, INFINITY, 0);
+      Color color = Rt_TraceRay(scene, origin, direction, 1, INFINITY, 3);
       SetPixel(x + canvas.halfWidth,
-               canvas.heightMinusOne - (y + canvas.halfHeight), color);
+               canvas.heightMinusOne - (y + canvas.halfHeight),
+               ColorToUnsignedInt(color));
     }
   }
 }
