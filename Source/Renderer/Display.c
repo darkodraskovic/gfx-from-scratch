@@ -32,6 +32,28 @@ void InitRenderer(DisplayConfig displayConfig) {
   bufferSize = width * displayConfig.height * sizeof(unsigned int);
 }
 
+// TODO: handle alpha
+inline Color ColorScale(Color color, float s) {
+  if (s > 1) s = 1;
+  color.r *= s;
+  color.b *= s;
+  color.g *= s;
+  return color;
+}
+
+// TODO: handle alpha
+inline Color ColorMix(Color color1, Color color2, float ratio) {
+  color1 = ColorScale(color1, 1 - ratio);
+  color2 = ColorScale(color2, ratio);
+  return (Color){color1.r + color2.r, color1.g + color2.g, color1.b + color2.b,
+                 255};
+}
+
+inline unsigned int ColorToUnsignedInt(Color color) {
+  return (((unsigned int)color.a << 24) | ((unsigned int)color.b << 16) |
+          ((unsigned int)color.g << 8) | (unsigned int)color.r);
+}
+
 void SetPixel(unsigned int x, unsigned int y, unsigned int color) {
   *(drawBuffer + y * width + x) = color;
 }
@@ -48,10 +70,9 @@ int Run(DisplayConfig displayConfig) {
     Update();      // hook
     PostUpdate();  // hook
 
-    clearBackground();
-
     BeginDrawing();
 
+    clearBackground();
     // set buffer values
     Draw();  // hook
 

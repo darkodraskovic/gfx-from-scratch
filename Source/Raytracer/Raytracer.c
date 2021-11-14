@@ -1,5 +1,6 @@
 #include "Raytracer.h"
 
+#include "../Renderer/Display.h"
 #include "../Util/Array.h"
 #include "raymath.h"
 
@@ -28,23 +29,23 @@ static inline Closest closestIntersection(Rt_Scene* scene, Vector3 origin,
   return closest;
 }
 
-static inline float computeDiffuse(float intensity, Vector3 light,
+// expects len(normal) == 1
+static inline float computeDiffuse(float intensity, Vector3 lightDir,
                                    Vector3 normal) {
-  float dot = Vector3DotProduct(light, normal);
+  float dot = Vector3DotProduct(lightDir, normal);
   if (dot < 0) return 0;
 
   /* intensity times cosine of light-normal angle */
-  return intensity *
-         (dot / sqrtf(Vector3LengthSqr(light) * Vector3LengthSqr(normal)));
-  /* (dot / (Vector3Length(light) * Vector3Length(normal))); */
+  return intensity * (dot / Vector3Length(lightDir));
 }
 
-static inline float computeSpecular(float intensity, Vector3 light,
+// expects len(normal) == 1
+static inline float computeSpecular(float intensity, Vector3 lightDir,
                                     Vector3 normal, Vector3 view,
                                     float specular) {
   if (specular == -1) return 0;
 
-  Vector3 reflect = Vector3Reflect(light, normal);
+  Vector3 reflect = Vector3Reflect(Vector3Scale(lightDir, -1), normal);
 
   float dot = Vector3DotProduct(reflect, view);
   if (dot < 0) return 0;
@@ -55,9 +56,9 @@ static inline float computeSpecular(float intensity, Vector3 light,
               specular);
 }
 
-static inline Rt_Ball* inShadow(Rt_Scene* scene, Vector3 point, Vector3 light,
-                                float t) {
-  Closest closest = closestIntersection(scene, point, light, 0.001, t);
+static inline Rt_Ball* inShadow(Rt_Scene* scene, Vector3 point,
+                                Vector3 lightDir, float t) {
+  Closest closest = closestIntersection(scene, point, lightDir, 0.001, t);
   return closest.ball;
 }
 
@@ -96,30 +97,36 @@ float computeLighting(Rt_Scene* scene, Vector3 point, Vector3 normal,
   return intensity;
 }
 
-unsigned int Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
-                         float minT, float maxT, int depth) {
+Color BACKGROUND_COLOR = BLACK;
+
+Color Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
+                  float minT, float maxT, int depth) {
   Closest closest = closestIntersection(scene, origin, direction, minT, maxT);
 
   if (!closest.ball) {
-    /* return 0xffffffff; */
-    return 0xff000000;
+    return BACKGROUND_COLOR;
   }
 
   // sphere-ray intersection point
   Vector3 point = Vector3Add(origin, Vector3Scale(direction, closest.t));
   // intersection point normal
   Vector3 normal = Vector3Subtract(point, closest.ball->sphere.center);
+  normal = Vector3Normalize(normal);
 
-  unsigned int localColor = SetColorBrightness(
-      closest.ball->color,
-      computeLighting(scene, point, normal, closest.ball->specular));
+  float intensity =
+      computeLighting(scene, point, normal, closest.ball->specular);
+  Color localColor = ColorScale(closest.ball->color, intensity);
 
   float reflective = closest.ball->reflective;
   if (depth < 1 || reflective <= 0) return localColor;
 
   Vector3 reflection = Vector3Reflect(direction, normal);
-  unsigned int reflectedColor =
+  Color reflectedColor =
       Rt_TraceRay(scene, point, reflection, 0.001, INFINITY, depth - 1);
 
-  return BelendColors(localColor, reflectedColor, reflective);
+  // TODO: fix this hack; handle background color via alpha
+  if (ColorToInt(reflectedColor) == ColorToInt(BACKGROUND_COLOR))
+    return localColor;
+
+  return ColorMix(localColor, reflectedColor, reflective);
 }

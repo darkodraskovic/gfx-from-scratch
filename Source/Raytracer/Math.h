@@ -1,6 +1,7 @@
 #ifndef MATH_RT_H
 #define MATH_RT_H
 
+#include "raylib.h"
 #include "raymath.h"
 
 typedef struct {

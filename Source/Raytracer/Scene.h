@@ -16,7 +16,8 @@ typedef struct {
 
 typedef struct {
   Rt_Sphere sphere;
-  color_t color;
+  // color_t color;
+  Color color;
   float specular;
   float reflective;
 } Rt_Ball;

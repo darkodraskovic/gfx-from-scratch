@@ -46,10 +46,10 @@ void Rt_Render(Rt_Scene* scene) {
   for (int x = canvas.left; x < canvas.right; x++) {
     for (int y = canvas.top; y < canvas.bottom; y++) {
       canvasToViewport(x, y);
-      unsigned int color =
-          Rt_TraceRay(scene, origin, direction, 1, INFINITY, 0);
+      Color color = Rt_TraceRay(scene, origin, direction, 1, INFINITY, 2);
       SetPixel(x + canvas.halfWidth,
-               canvas.heightMinusOne - (y + canvas.halfHeight), color);
+               canvas.heightMinusOne - (y + canvas.halfHeight),
+               ColorToUnsignedInt(color));
     }
   }
 }
