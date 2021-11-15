@@ -62,11 +62,10 @@ static inline Rt_Ball* inShadow(Rt_Scene* scene, Vector3 point,
   return closest.ball;
 }
 
-float computeLighting(Rt_Scene* scene, Vector3 point, Vector3 normal,
-                      float specuar) {
+float computeLighting(Rt_Scene* scene, Vector3 origin, Vector3 point,
+                      Vector3 normal, float specuar) {
   float intensity = 0.0;
-  // TODO: make fixed camera/eye origin movable
-  Vector3 view = Vector3Scale(point, -1);
+  Vector3 view = Vector3Subtract(origin, point);
 
   // ambient
   intensity += scene->ambientLight;
@@ -110,11 +109,11 @@ Color Rt_TraceRay(Rt_Scene* scene, Vector3 origin, Vector3 direction,
   // sphere-ray intersection point
   Vector3 point = Vector3Add(origin, Vector3Scale(direction, closest.t));
   // intersection point normal
-  Vector3 normal = Vector3Subtract(point, closest.ball->sphere.center);
-  normal = Vector3Normalize(normal);
+  Vector3 normal =
+      Vector3Normalize(Vector3Subtract(point, closest.ball->sphere.center));
 
   float intensity =
-      computeLighting(scene, point, normal, closest.ball->specular);
+      computeLighting(scene, origin, point, normal, closest.ball->specular);
   Color localColor = ColorScale(closest.ball->color, intensity);
 
   float reflective = closest.ball->reflective;
