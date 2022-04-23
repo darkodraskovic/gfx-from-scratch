@@ -12,6 +12,8 @@ add_library(util SHARED
   )
 target_include_directories(util PUBLIC Source/Util)
 
+add_subdirectory(Source/Renderer)
+
 add_library(raytracer SHARED
   Source/Raytracer/Math.c
   Source/Raytracer/Scene.c
@@ -20,7 +22,7 @@ add_library(raytracer SHARED
   Source/Raytracer/Hooks.c
   )
 target_include_directories(raytracer PUBLIC Source/Raytracer)
-target_link_libraries(raytracer PUBLIC renderer util)
+target_link_libraries(raytracer PUBLIC chunky util)
 
 add_executable(main
   Source/Config.c
