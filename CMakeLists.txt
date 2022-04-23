@@ -12,12 +12,6 @@ add_library(util SHARED
   )
 target_include_directories(util PUBLIC Source/Util)
 
-add_library(renderer SHARED
-  Source/Renderer/Display.c
-  )
-target_include_directories(renderer PUBLIC Source/Renderer)
-target_link_libraries(renderer PUBLIC raylib)
-
 add_library(raytracer SHARED
   Source/Raytracer/Math.c
   Source/Raytracer/Scene.c
