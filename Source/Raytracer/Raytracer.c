@@ -1,6 +1,6 @@
 #include "Raytracer.h"
 
-#include "../Renderer/Display.h"
+#include "../Renderer/display.h"
 #include "../Util/Array.h"
 #include "raymath.h"
 

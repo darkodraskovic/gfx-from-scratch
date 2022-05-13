@@ -1,7 +1,7 @@
 #include "Raytracer/Hooks.h"
 
 #include "Config.h"
-#include "Renderer/Hooks.h"
+#include "Renderer/hooks.h"
 
 void Init() { Rt_Init(displayConfig.width, displayConfig.height); }
 

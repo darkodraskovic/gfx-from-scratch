@@ -1,6 +1,6 @@
 #include "Viewport.h"
 
-#include "../Renderer/Display.h"
+#include "../Renderer/display.h"
 #include "Raytracer.h"
 
 struct {
